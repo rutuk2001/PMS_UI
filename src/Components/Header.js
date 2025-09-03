@@ -1,24 +1,21 @@
 import React, { useEffect, startTransition } from "react";
 import { styled } from "@mui/material/styles";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Box,
+import { 
+  AppBar, 
+  Toolbar, 
+  IconButton, 
+  Box, 
+  Badge, 
+  Avatar, 
+  Menu, 
+  MenuItem, 
   Typography,
-  Badge,
-  Avatar,
-  Menu,
-  Divider,
-  ListItemButton,
-  ListItemText,
-  Button,
-  colors,
+  Divider
 } from "@mui/material";
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
+import SettingsIcon from "@mui/icons-material/Settings";
 import Logo from "./../assets/images/pms_logo.png";
 import { removeToken } from "../store/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,23 +34,28 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
   },
 }));
+
 const Header = React.memo(({ onDrawerOpen, drawerOpen }) => {
   const currentUserRole = localStorage.getItem("role");
   const [anchorUserEl, setAnchorUserEl] = React.useState(null);
   const openUser = Boolean(anchorUserEl);
+  
   const handleUserClick = (event) => {
     setAnchorUserEl(event.currentTarget);
   };
+  
   const handleUserClose = () => {
     setAnchorUserEl(null);
   };
+  
   const currentUserName = localStorage.getItem("name");
-  const [anchorNotificationsEl, setAnchorNotificationsEl] =
-    React.useState(null);
+  const [anchorNotificationsEl, setAnchorNotificationsEl] = React.useState(null);
   const openNotifications = Boolean(anchorNotificationsEl);
+  
   const handleNotificationsClick = (event) => {
     setAnchorNotificationsEl(event.currentTarget);
   };
+  
   const handleNotificationsClose = () => {
     setAnchorNotificationsEl(null);
   };
@@ -63,9 +65,33 @@ const Header = React.memo(({ onDrawerOpen, drawerOpen }) => {
 
   const handleLogout = () => {
     startTransition(() => {
+      // Clear all localStorage items
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("role");
+      localStorage.removeItem("name");
+      localStorage.removeItem("userId");
+      
+      // Dispatch logout action
       dispatch(removeToken());
+      
+      // Close user menu
+      handleUserClose();
+      
+      // Navigate to login page
       navigate("/");
     });
+  };
+
+  const handleProfileClick = () => {
+    handleUserClose();
+    // Navigate to profile page if you have one
+    // navigate("/profile");
+  };
+
+  const handleSettingsClick = () => {
+    handleUserClose();
+    // Navigate to settings page if you have one
+    // navigate("/settings");
   };
 
   return (
@@ -79,36 +105,31 @@ const Header = React.memo(({ onDrawerOpen, drawerOpen }) => {
       }}
     >
       <Toolbar sx={{ display: "flex", alignItems: "center" }}>
-        <Typography
-          variant="h6"
-          noWrap
-          component="a"
-          className="MuiLogo"
+        <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-start",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
+            justifyContent: "center",
+            width: drawerOpen ? 170 : 60, // match drawer width
+            transition: "width 0.3s ease",
           }}
         >
           {drawerOpen ? (
-            <>
-              <img src={Logo} alt="PMS" width="40" />
-            </>
+            <img src={Logo} alt="PMS" width="40" />
           ) : (
             <span style={{ color: "#007ab1", fontSize: 13 }}>PMS</span>
           )}
-        </Typography>
+        </Box>
+
         <IconButton
-          sx={{ flexGrow: 0 }}
+          sx={{ flexShrink: 0 }}
           color="textPrimary"
-          className="MuiToggler"
           aria-label="open drawer"
           onClick={onDrawerOpen}
         >
           <MenuOpenOutlinedIcon />
         </IconButton>
+
         <Box sx={{ ml: "auto" }}>
           <IconButton
             onClick={handleUserClick}
@@ -123,78 +144,73 @@ const Header = React.memo(({ onDrawerOpen, drawerOpen }) => {
                 bgcolor: "#007ab1",
                 border: "1px solid #007ab1",
                 color: "white",
-                fontSize: "16px",
-                fontWeight: "600",
-                boxSizing: "border-box",
               }}
             >
               <PersonOutlineOutlinedIcon />
             </Avatar>
           </IconButton>
         </Box>
-
-        <Menu
-          anchorEl={anchorUserEl}
-          id="user-menu"
-          open={openUser}
-          onClose={handleUserClose}
-          onClick={handleUserClose}
-          PaperProps={{
-            elevation: 0,
-            sx: {
-              overflow: "visible",
-              filter: "drop-shadow(6px 6px 10px rgba(0, 0, 0, 0.1))",
-              mt: 1,
-              px: 3,
-              pt: 2,
-              pb: 1,
-              borderRadius: "12px",
-              "& .MuiAvatar-root": {
-                width: 64,
-                height: 64,
-              },
-            },
-          }}
-          transformOrigin={{ horizontal: "right", vertical: "top" }}
-          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        >
-          <Typography component="div" sx={{ textAlign: "center" }}>
-            <Avatar
-              sx={{
-                mb: 2,
-                mx: "auto",
-                bgcolor: "#007ab1",
-                border: "1px solid #007ab1",
-                color: "white",
-                fontSize: "16px",
-                fontWeight: "600",
-                boxSizing: "border-box",
-              }}
-            >
-              <PersonOutlineOutlinedIcon />
-            </Avatar>
-
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{ mb: 0.5, fontWeight: "500" }}
-            >
-              {currentUserName}
-            </Typography>
-            <Typography sx={{ mb: 3 }}>
-              <Typography variant="caption">{currentUserRole}</Typography>
-            </Typography>
-          </Typography>
-          <Button
-            variant="outlined"
-            color="primary"
-            fullWidth
-            onClick={handleLogout}
-          >
-            LOGOUT
-          </Button>
-        </Menu>
       </Toolbar>
+
+      {/* User Menu Dropdown */}
+      <Menu
+        id="user-menu"
+        anchorEl={anchorUserEl}
+        open={openUser}
+        onClose={handleUserClose}
+        onClick={handleUserClose}
+        PaperProps={{
+          elevation: 3,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: 1.5,
+            minWidth: 200,
+          },
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        {/* User Info Section */}
+        <Box sx={{ px: 2, py: 1.5, borderBottom: '1px solid #e0e0e0' }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#333' }}>
+            {currentUserName || 'User'}
+          </Typography>
+          <Typography variant="caption" sx={{ color: '#666' }}>
+            {currentUserRole || 'Role'}
+          </Typography>
+        </Box>
+
+        {/* Menu Items */}
+        <MenuItem onClick={handleProfileClick} sx={{ py: 1.5 }}>
+          <PersonOutlineOutlinedIcon sx={{ mr: 2, fontSize: 20 }} />
+          <Typography variant="body2">Profile</Typography>
+        </MenuItem>
+        
+        <MenuItem onClick={handleSettingsClick} sx={{ py: 1.5 }}>
+          <SettingsIcon sx={{ mr: 2, fontSize: 20 }} />
+          <Typography variant="body2">Settings</Typography>
+        </MenuItem>
+
+        <Divider sx={{ my: 1 }} />
+
+        {/* Logout Item */}
+        <MenuItem 
+          onClick={handleLogout} 
+          sx={{ 
+            py: 1.5, 
+            color: '#d32f2f',
+            '&:hover': {
+              backgroundColor: '#ffebee',
+            }
+          }}
+        >
+          <LogoutIcon sx={{ mr: 2, fontSize: 20 }} />
+          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+            Logout
+          </Typography>
+        </MenuItem>
+      </Menu>
     </AppBar>
   );
 });

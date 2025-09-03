@@ -13,10 +13,11 @@ import {
   Link,
   IconButton,
   InputAdornment,
+  Box,
 } from "@mui/material";
 import { VisibilityOutlined, VisibilityOffOutlined } from "@mui/icons-material";
 import { ToastContainer, toast } from "react-toastify";
-import Logo from "./../../assets/images/Carbon6(greenLogo).svg";
+import Logo from "./../../assets/images/pms_logo.png";
 import {
   loginApi,
   clearErrorMessage,
@@ -116,9 +117,13 @@ function Login() {
 
       <Card sx={{ width: 466, maxWidth: "100%", borderRadius: 3 }}>
         <CardContent sx={{ p: { xs: 4, md: 6 } }}>
-          <Typography sx={{ mb: { xs: 3, md: 4 } }}>
-            <img src={Logo} alt="PMS" style={{ width: 376, height: 80 }} />
-          </Typography>
+          <Box sx={{ mb: { xs: 3, md: 4 } }}>
+            <img
+              src={Logo}
+              alt="PMS"
+              style={{ display: "flex", margin: "auto", height: "100px" }}
+            />
+          </Box>
           <Typography variant="h4" color="text.secondary" sx={{ mb: 1 }}>
             Log In
           </Typography>

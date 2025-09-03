@@ -6,9 +6,7 @@ function Footer() {
   return (
     <footer className="footer">
       <Container maxWidth="xl">
-        <Typography
-          sx={{ py: 2, borderTop: "2px solid #EAEAED", textAlign: "right" }}
-        >
+        <Typography sx={{ py: 2, textAlign: "center" }}>
           <Typography variant="caption" color="text.primary">
             ©2024 All Rights Reserved by Atharv Clinic
           </Typography>
