@@ -198,7 +198,7 @@ const VisitHistoryTable = ({ visits, onView, onEdit, onAddPrescription, patient 
                               </Stack>
                             </Box>
                           )}
-                          <Box sx={{ mt: 2 }}>
+                          <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
                             <Button
                               variant="contained"
                               size="small"
@@ -207,6 +207,15 @@ const VisitHistoryTable = ({ visits, onView, onEdit, onAddPrescription, patient 
                               fullWidth
                             >
                               View Prescription
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              startIcon={<Edit />}
+                              onClick={() => onEdit(visit)}
+                              fullWidth
+                            >
+                              Edit Prescription
                             </Button>
                           </Box>
                         </Stack>
@@ -302,23 +311,33 @@ const VisitHistoryTable = ({ visits, onView, onEdit, onAddPrescription, patient 
                         >
                           <Visibility />
                         </IconButton>
-                        <IconButton
+                        {/* <IconButton
                           size="small"
                           color="secondary"
                           onClick={() => onEdit(visit)}
                           title="Edit Visit"
                         >
                           <Edit />
-                        </IconButton>
+                        </IconButton> */}
                         {visit.prescription && (
-                          <IconButton
-                            size="small"
-                            color="success"
-                            onClick={() => handleViewPrescription(visit)}
-                            title="View Prescription"
-                          >
-                            <Receipt />
-                          </IconButton>
+                          <>
+                            <IconButton
+                              size="small"
+                              color="success"
+                              onClick={() => handleViewPrescription(visit)}
+                              title="View Prescription"
+                            >
+                              <Receipt />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              color="warning"
+                              onClick={() => onEdit(visit)}
+                              title="Edit Prescription"
+                            >
+                              <Edit />
+                            </IconButton>
+                          </>
                         )}
                       </Stack>
                     </TableCell>

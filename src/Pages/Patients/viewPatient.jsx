@@ -44,18 +44,26 @@ const ViewPatient = () => {
   };
 
   const handleEditVisit = (visit) => {
-    // Handle editing visit
-    console.log("Edit visit:", visit);
+    // Navigate to edit prescription page with visitId or prescriptionId
+    if (visit.prescription?._id) {
+      startTransition(() => {
+        navigate(`/prescription/${id}?prescriptionId=${visit.prescription._id}`);
+      });
+    } else if (visit._id) {
+      startTransition(() => {
+        navigate(`/prescription/${id}?visitId=${visit._id}`);
+      });
+    }
   };
 
   const handleAddPrescription = (visit = null) => {
     if (visit) {
-      // Edit existing visit prescription
+      console.log("Visit:", visit);
       startTransition(() => {
         navigate(`/prescription/${id}?visitId=${visit._id}`);
       });
-    } else {
-      // Create new visit and prescription
+    } else {  
+      console.log("Add prescription",id);
       startTransition(() => {
         navigate(`/prescription/${id}`);
       });
@@ -64,7 +72,7 @@ const ViewPatient = () => {
 
   const handleBackNavigation = () => {
     startTransition(() => {
-      navigate(-1);
+      navigate("/all_patients");
     });
   };
 

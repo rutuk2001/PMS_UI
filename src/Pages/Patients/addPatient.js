@@ -8,7 +8,7 @@ import {
   Autocomplete,
   Checkbox,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { countryStateCityData } from "./config";
@@ -17,6 +17,8 @@ import {
   clearErrorMessage,
   clearSuccessMessage,
   registerPatient,
+  updatePatient,
+  getPatient,
 } from "../../store/patient/patientSlice";
 import { toast } from "react-toastify";
 
@@ -38,7 +40,10 @@ const healthOptions = [
 function PatientForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error, success } = useSelector((state) => state.patientDetails);
+  const { error, success, selectedPatient } = useSelector((state) => state.patientDetails);
+  const { id } = useParams();
+
+  const isEditMode = Boolean(id);
 
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -62,26 +67,66 @@ function PatientForm() {
 
   const [validationError, setValidationError] = useState({});
 
+  // Load patient details in edit mode
+  useEffect(() => {
+    if (isEditMode) {
+      dispatch(getPatient(id));
+    }
+  }, [dispatch, id, isEditMode]);
+
+  // Populate form when patient data is available
+  useEffect(() => {
+    if (isEditMode && selectedPatient) {
+      setPatientForm({
+        first_name: selectedPatient.first_name || "",
+        last_name: selectedPatient.last_name || "",
+        gender: selectedPatient.gender || null,
+        age: selectedPatient.age || "",
+        phone_number: selectedPatient.phone_number || "",
+        location: selectedPatient.location || "",
+        address: selectedPatient.address || "",
+        city: selectedPatient.city || "",
+        state: selectedPatient.state || "",
+        country: selectedPatient.country || "",
+        blood_group: selectedPatient.blood_group || "",
+        health_issues_initial: selectedPatient.health_issues_initial || [],
+        customHealthIssue: selectedPatient.customHealthIssue || "",
+      });
+      setFormSubmitted(false);
+      setValidationError({});
+    }
+  }, [isEditMode, selectedPatient]);
+
   // Update States based on Country
   useEffect(() => {
-    if (patientForm.country) {
-      setStates(Object.keys(countryStateCityData[patientForm.country].states));
+    const selectedCountry = patientForm.country;
+    if (selectedCountry) {
+      setStates(Object.keys(countryStateCityData[selectedCountry].states));
+      setPatientForm((prev) => {
+        if (prev.country === selectedCountry) return prev;
+        return { ...prev, state: "", city: "" };
+      });
     } else {
       setStates([]);
+      setPatientForm((prev) => ({ ...prev, state: "", city: "" }));
     }
-    setPatientForm((prev) => ({ ...prev, state: "", city: "" }));
   }, [patientForm.country]);
 
   // Update Cities based on State
   useEffect(() => {
-    if (patientForm.state) {
+    const selectedState = patientForm.state;
+    if (selectedState && patientForm.country) {
       setCities(
-        countryStateCityData[patientForm.country].states[patientForm.state]
+        countryStateCityData[patientForm.country].states[selectedState]
       );
+      setPatientForm((prev) => {
+        if (prev.state === selectedState) return prev;
+        return { ...prev, city: "" };
+      });
     } else {
       setCities([]);
+      setPatientForm((prev) => ({ ...prev, city: "" }));
     }
-    setPatientForm((prev) => ({ ...prev, city: "" }));
   }, [patientForm.state]);
 
   // Toast messages
@@ -111,46 +156,15 @@ function PatientForm() {
     let errors = {};
     let isValid = true;
 
-    Object.keys(patientForm).forEach((key) => {
+    const requiredFields = ["first_name", "last_name", "gender", "age", "location", "address"];
+
+    requiredFields.forEach((key) => {
       const value = patientForm[key];
-
-      if (["health_issues_initial", "customHealthIssue"].includes(key)) return;
-
-      if (["gender", "city", "state", "country", "blood_group"].includes(key)) {
-        if (!value) {
-          errors[key] = "This field is required";
-          isValid = false;
-        }
-      } else {
-        if (!value || (typeof value === "string" && value.trim() === "")) {
-          errors[key] = "This field is required";
-          isValid = false;
-        }
+      if (!value || (typeof value === "string" && value.trim() === "")) {
+        errors[key] = "This field is required";
+        isValid = false;
       }
     });
-
-    // Validate health_issues_initial
-    if (
-      !Array.isArray(patientForm.health_issues_initial) ||
-      patientForm.health_issues_initial.length === 0
-    ) {
-      errors.health_issues_initial = "At least one health issue is required";
-      isValid = false;
-    }
-
-    // If "Other" is selected
-    const hasOther = patientForm.health_issues_initial.some(
-      (option) => option.label?.toLowerCase() === "other"
-    );
-
-    if (
-      hasOther &&
-      (!patientForm.customHealthIssue ||
-        patientForm.customHealthIssue.trim() === "")
-    ) {
-      errors.customHealthIssue = "Please specify the custom health issue";
-      isValid = false;
-    }
 
     return { errors, isValid };
   };
@@ -166,9 +180,14 @@ function PatientForm() {
     }
 
     try {
-      const response = await dispatch(registerPatient(patientForm)).unwrap();
-      if (response && response.data._id) {
-        navigate("/all_patients");
+      if (isEditMode) {
+        await dispatch(updatePatient({ id, data: patientForm })).unwrap();
+        navigate(`/view/patientinfo/${id}`);
+      } else {
+        const response = await dispatch(registerPatient(patientForm)).unwrap();
+        if (response && response.data._id) {
+          navigate("/all_patients");
+        }
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -201,7 +220,7 @@ function PatientForm() {
 
   return (
     <Card className="card">
-      <CardHeader title="Patient Registration Form" />
+      <CardHeader title={isEditMode ? "Edit Patient" : "Patient Registration Form"} />
       <Grid container spacing={3} sx={{ padding: 3 }}>
         {/* First & Last Name */}
         <Grid item xs={12} sm={6}>
@@ -275,7 +294,6 @@ function PatientForm() {
             onChange={handleChange}
             fullWidth
             type="tel"
-            required
             error={formSubmitted && !!validationError.phone_number}
             helperText={formSubmitted ? validationError.phone_number : ""}
           />
@@ -323,7 +341,6 @@ function PatientForm() {
                 {...params}
                 label="Country"
                 fullWidth
-                required
                 error={formSubmitted && !!validationError.country}
                 helperText={formSubmitted ? validationError.country : ""}
               />
@@ -343,7 +360,6 @@ function PatientForm() {
                 {...params}
                 label="State"
                 fullWidth
-                required
                 error={formSubmitted && !!validationError.state}
                 helperText={formSubmitted ? validationError.state : ""}
               />
@@ -363,7 +379,6 @@ function PatientForm() {
                 {...params}
                 label="City"
                 fullWidth
-                required
                 error={formSubmitted && !!validationError.city}
                 helperText={formSubmitted ? validationError.city : ""}
               />
@@ -409,7 +424,6 @@ function PatientForm() {
                 {...params}
                 label="Health Conditions"
                 fullWidth
-                required
                 error={formSubmitted && !!validationError.health_issues_initial}
                 helperText={
                   formSubmitted ? validationError.health_issues_initial : ""
@@ -434,7 +448,6 @@ function PatientForm() {
                 }));
               }}
               fullWidth
-              required
               error={formSubmitted && !!validationError.customHealthIssue}
               helperText={
                 formSubmitted ? validationError.customHealthIssue : ""
@@ -457,7 +470,6 @@ function PatientForm() {
                 {...params}
                 label="Blood Group"
                 fullWidth
-                required
                 error={formSubmitted && !!validationError.blood_group}
                 helperText={formSubmitted ? validationError.blood_group : ""}
               />

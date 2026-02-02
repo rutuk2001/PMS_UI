@@ -1,5 +1,5 @@
 const dev = {
-  apiUrl: process.env.REACT_APP_API_URL || "http://localhost:5001",
+  apiUrl: process.env.REACT_APP_API_URL,
 };
 
 const prod = {

@@ -20,7 +20,8 @@ import {
 import { Add, Delete, ArrowBack, Receipt } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { prescriptionPost, getVisitById } from "../../store/patient/patientSlice";
+import { toast } from "react-toastify";
+import { prescriptionPost, getVisitById, updatePrescription, getPrescriptionById, clearSuccessMessage, clearErrorMessage } from "../../store/patient/patientSlice";
 import PrescriptionFormat from "../../Components/PrescriptionFormat";
 
 const CreatePrescriptionForm = () => {
@@ -28,16 +29,17 @@ const CreatePrescriptionForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
-  const visitId = searchParams.get('visitId');
+  const visitId = searchParams.get("visitId");
+  const prescriptionId = searchParams.get("prescriptionId");
   
   const { loading, error, success } = useSelector((state) => state.patientDetails || {});
-  const { selectedVisit, selectedVisitLoading } = useSelector((state) => state.patientDetails || {});
+  const { selectedVisit, selectedVisitLoading, selectedPrescription, selectedPrescriptionLoading } = useSelector((state) => state.patientDetails || {});
 
   const [formData, setFormData] = useState({
     patient: "",
     visit_date: new Date().toISOString().split("T")[0],
     diagnosis: "",
-    prescribed_by: "",
+    prescribed_by: "Dr. Nilesh Choudhari",
     medications: [
       { name: "", dosage: "", frequency: "", duration: "", notes: "" },
     ],
@@ -50,6 +52,14 @@ const CreatePrescriptionForm = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showPrescriptionDialog, setShowPrescriptionDialog] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  // Clear success/error messages on component mount
+  useEffect(() => {
+    dispatch(clearSuccessMessage());
+    dispatch(clearErrorMessage());
+    setHasSubmitted(false);
+  }, [dispatch]);
 
   // Auto-fill patient ID from route
   useEffect(() => {
@@ -58,13 +68,21 @@ const CreatePrescriptionForm = () => {
     }
   }, [id]);
 
-  // Load existing visit data if editing
+  // Load existing visit data if editing via visitId
   useEffect(() => {
     if (visitId) {
       setIsEditing(true);
       dispatch(getVisitById(visitId));
     }
   }, [visitId, dispatch]);
+
+  // Load existing prescription data if editing via prescriptionId
+  useEffect(() => {
+    if (prescriptionId) {
+      setIsEditing(true);
+      dispatch(getPrescriptionById(prescriptionId));
+    }
+  }, [prescriptionId, dispatch]);
 
   // Populate form with existing visit data
   useEffect(() => {
@@ -73,34 +91,87 @@ const CreatePrescriptionForm = () => {
       const prescription = visit.prescription;
       
       setFormData({
-        patient: visit.patient._id || visit.patient,
-        visit_date: new Date(visit.visit_date).toISOString().split("T")[0],
+        patient: visit.patient?._id || visit.patient || "",
+        visit_date: visit.visit_date
+          ? new Date(visit.visit_date).toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0],
         diagnosis: prescription?.diagnosis || visit.diagnosis || "",
-        prescribed_by: prescription?.prescribed_by || visit.doctor_name || "",
-        medications: prescription?.medications?.length > 0 
-          ? prescription.medications.map(med => ({
-              name: med.name || "",
-              dosage: med.dosage || "",
-              frequency: med.frequency || "",
-              duration: med.duration || "",
-              notes: med.notes || "",
-            }))
-          : [{ name: "", dosage: "", frequency: "", duration: "", notes: "" }],
-        follow_up_date: visit.follow_up_date 
-          ? new Date(visit.follow_up_date).toISOString().split("T")[0]
+        prescribed_by:
+          prescription?.prescribed_by ||
+          visit.doctor_name ||
+          "Dr. Nilesh Choudhari",
+        medications:
+          prescription?.medications?.length > 0
+            ? prescription.medications.map((med) => ({
+                name: med.name || "",
+                dosage: med.dosage || "",
+                frequency: med.frequency || "",
+                duration: med.duration || "",
+                notes: med.notes || "",
+              }))
+            : [{ name: "", dosage: "", frequency: "", duration: "", notes: "" }],
+        follow_up_date: (prescription?.follow_up_date || visit.follow_up_date)
+          ? new Date(prescription?.follow_up_date || visit.follow_up_date).toISOString().split("T")[0]
           : "",
-        notes: visit.notes || "",
+        notes: prescription?.notes || visit.notes || "",
         symptoms_or_reason: visit.symptoms_or_reason || "",
       });
     }
   }, [selectedVisit, isEditing]);
 
+  // Populate form when loading directly by prescriptionId
   useEffect(() => {
-    if (success) {
-      // Show prescription format dialog after successful submission
-      setShowPrescriptionDialog(true);
+    if (selectedPrescription && prescriptionId && !isEditing) {
+      setIsEditing(true);
     }
-  }, [success]);
+    if (selectedPrescription && prescriptionId) {
+      const rx = selectedPrescription;
+      const patientIdFromRx =
+        rx.patient?._id || rx.patient?.id || rx.patient || id || "";
+      setFormData({
+        patient: patientIdFromRx,
+        visit_date: rx.visit_date
+          ? new Date(rx.visit_date).toISOString().split("T")[0]
+          : new Date().toISOString().split("T")[0],
+        diagnosis: rx.diagnosis || "",
+        prescribed_by: rx.prescribed_by || "Dr. Nilesh Choudhari",
+        medications:
+          rx.medications?.length > 0
+            ? rx.medications.map((med) => ({
+                name: med.name || "",
+                dosage: med.dosage || "",
+                frequency: med.frequency || "",
+                duration: med.duration || "",
+                notes: med.notes || "",
+              }))
+            : [{ name: "", dosage: "", frequency: "", duration: "", notes: "" }],
+        follow_up_date: rx.follow_up_date
+          ? new Date(rx.follow_up_date).toISOString().split("T")[0]
+          : "",
+        notes: rx.notes || "",
+        symptoms_or_reason: rx.symptoms_or_reason || rx.visit?.symptoms_or_reason || "",
+      });
+    }
+  }, [selectedPrescription, prescriptionId, id]);
+
+  // Show toast notifications for success and error
+  useEffect(() => {
+    if (success && hasSubmitted) {
+      toast.success(success);
+      dispatch(clearSuccessMessage());
+      // For create flow, open preview automatically; for edit flow, show success and allow viewing
+      if (!isEditing) {
+        setShowPrescriptionDialog(true);
+      }
+    }
+  }, [success, hasSubmitted, isEditing, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearErrorMessage());
+    }
+  }, [error, dispatch]);
 
   const validateForm = () => {
     const errors = {};
@@ -172,10 +243,28 @@ const CreatePrescriptionForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
+    setHasSubmitted(true);
     if (validateForm()) {
-      dispatch(prescriptionPost({ id, formData }));
+      const existingPrescriptionId =
+        prescriptionId || selectedVisit?.prescription?._id || selectedPrescription?._id;
+
+      if (existingPrescriptionId) {
+        const updateData = {
+          diagnosis: formData.diagnosis,
+          prescribed_by: formData.prescribed_by,
+          medications: formData.medications,
+          follow_up_date: formData.follow_up_date || null,
+          notes: formData.notes || "",
+          visit_date: formData.visit_date,
+          symptoms_or_reason: formData.symptoms_or_reason,
+        };
+        dispatch(updatePrescription({ prescriptionId: existingPrescriptionId, updateData }));
+      } else {
+        dispatch(prescriptionPost({ id, formData }));
+      }
     } else {
       console.log("Form validation failed", formErrors);
+      setHasSubmitted(false);
     }
   };
 
@@ -193,7 +282,12 @@ const CreatePrescriptionForm = () => {
     setShowPrescriptionDialog(false);
     // Navigate to patient details after viewing prescription
     startTransition(() => {
-      navigate(`/view/patientinfo/${id}`);
+      const patientTarget = formData.patient || id;
+      if (patientTarget) {
+        navigate(`/view/patientinfo/${patientTarget}`);
+      } else {
+        navigate(-1);
+      }
     });
   };
 
@@ -214,7 +308,7 @@ const CreatePrescriptionForm = () => {
     notes: formData.notes,
   });
 
-  if (selectedVisitLoading) {
+  if (selectedVisitLoading || selectedPrescriptionLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
         <CircularProgress />
@@ -233,7 +327,7 @@ const CreatePrescriptionForm = () => {
                   {isEditing ? "Edit Prescription" : "Create Prescription"}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Patient ID: {id}
+                  Patient ID: {formData.patient || id || "N/A"}
                 </Typography>
                 {isEditing && selectedVisit && (
                   <Typography variant="body2" color="text.secondary">
@@ -259,7 +353,7 @@ const CreatePrescriptionForm = () => {
             {success && (
               <Alert severity="success">
                 {String(success)}
-                <Box sx={{ mt: 1 }}>
+                <Box sx={{ mt: 1, display: "flex", gap: 1 }}>
                   <Button
                     variant="contained"
                     startIcon={<Receipt />}
@@ -268,6 +362,20 @@ const CreatePrescriptionForm = () => {
                   >
                     View Prescription
                   </Button>
+                  {isEditing && (
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        const patientTarget = formData.patient || id;
+                        if (patientTarget) {
+                          navigate(`/view/patientinfo/${patientTarget}`);
+                        }
+                      }}
+                      size="small"
+                    >
+                      Back to Patient Details
+                    </Button>
+                  )}
                 </Box>
               </Alert>
             )}
@@ -482,7 +590,7 @@ const CreatePrescriptionForm = () => {
         fullWidth
       >
         <DialogTitle>
-          Prescription Format
+          Prescription Format;
         </DialogTitle>
         <DialogContent>
           <PrescriptionFormat
