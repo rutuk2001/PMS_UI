@@ -1,10 +1,6 @@
 import { lazy } from "react";
-import { Navigate } from "react-router-dom";
 
-//layout
 const LoginLayout = lazy(() => import(`../Components/LoginLayout`));
-
-//components
 const Login = lazy(() => import(`../Pages/Login/index`));
 const ForgotPassword = lazy(() => import(`../Pages/ForgotPassword`));
 

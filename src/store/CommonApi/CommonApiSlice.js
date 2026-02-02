@@ -8,7 +8,7 @@ export const fetchFinancialYear = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/financial_year_list/`
+        `company_details/financial_year_list/`,
       );
 
       if (response.status === 400) {
@@ -20,7 +20,7 @@ export const fetchFinancialYear = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 //Financial year
 
@@ -29,7 +29,7 @@ export const fetchProcessEmissionGasType = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/others/process_emissions/gas_type/`
+        `environment/energy/others/process_emissions/gas_type/`,
       );
 
       if (response.status === 400) {
@@ -41,7 +41,7 @@ export const fetchProcessEmissionGasType = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchBusinessActivityList = createAsyncThunk(
@@ -49,7 +49,7 @@ export const fetchBusinessActivityList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/business_activity/business_activity_list/`
+        `company_details/business_activity/business_activity_list/`,
       );
 
       if (response.status === 400) {
@@ -61,7 +61,7 @@ export const fetchBusinessActivityList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchReclaimMaterialList = createAsyncThunk(
@@ -69,7 +69,7 @@ export const fetchReclaimMaterialList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/life_cycle/reclaim/material/`
+        `environment/life_cycle/reclaim/material/`,
       );
 
       if (response.status === 400) {
@@ -81,7 +81,7 @@ export const fetchReclaimMaterialList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchReclaimTypeList = createAsyncThunk(
@@ -89,7 +89,7 @@ export const fetchReclaimTypeList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/life_cycle/reclaim/reclaim_type/`
+        `environment/life_cycle/reclaim/reclaim_type/`,
       );
 
       if (response.status === 400) {
@@ -101,14 +101,14 @@ export const fetchReclaimTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 export const fetchWasteDisposedCategoryList = createAsyncThunk(
   "carbonCal/fetchWasteDisposedCategoryList",
   async () => {
     try {
       const response = await apiService.get(
-        `environment/waste/disposed_category/`
+        `environment/waste/disposed_category/`,
       );
 
       if (response.status === 400) {
@@ -120,7 +120,7 @@ export const fetchWasteDisposedCategoryList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchGetproductsServicesList = createAsyncThunk(
@@ -128,7 +128,7 @@ export const fetchGetproductsServicesList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/business_activity/products_services_list/`
+        `company_details/business_activity/products_services_list/`,
       );
 
       if (response.status === 400) {
@@ -140,14 +140,14 @@ export const fetchGetproductsServicesList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 export const fetchGetDestinationList = createAsyncThunk(
   "carbonCal/fetchGetDestinationList",
   async () => {
     try {
       const response = await apiService.get(
-        `environment/water/destination_list_without_treatment/`
+        `environment/water/destination_list_without_treatment/`,
       );
 
       if (response.status === 400) {
@@ -159,7 +159,7 @@ export const fetchGetDestinationList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 // type of facility Office/Plant
@@ -168,7 +168,7 @@ export const fetchTypeOfFacilityListApi = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/operations/type_of_facility_list/`
+        `company_details/operations/type_of_facility_list/`,
       );
 
       if (response.status === 400) {
@@ -180,7 +180,7 @@ export const fetchTypeOfFacilityListApi = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const FetchIndianStatesList = createAsyncThunk(
@@ -188,7 +188,7 @@ export const FetchIndianStatesList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/operations/indian_states_list/`
+        `company_details/operations/indian_states_list/`,
       );
 
       if (response.status === 400) {
@@ -200,7 +200,7 @@ export const FetchIndianStatesList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchHoldingLists = createAsyncThunk(
@@ -208,7 +208,7 @@ export const fetchHoldingLists = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/operations/type_of_holding_list/`
+        `company_details/operations/type_of_holding_list/`,
       );
 
       if (response.status === 400) {
@@ -220,7 +220,7 @@ export const fetchHoldingLists = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchMonthLists = createAsyncThunk(
@@ -228,7 +228,7 @@ export const fetchMonthLists = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/others/refrigerant_losses/months/`
+        `environment/energy/others/refrigerant_losses/months/`,
       );
 
       if (response.status === 400) {
@@ -240,14 +240,14 @@ export const fetchMonthLists = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 export const fetchTypeLists = createAsyncThunk(
   "carbonCal/fetchTypeListsService",
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/others/refrigerant_losses/type/`
+        `environment/energy/others/refrigerant_losses/type/`,
       );
 
       if (response.status === 400) {
@@ -259,7 +259,7 @@ export const fetchTypeLists = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 //facility based on plant location
@@ -268,7 +268,7 @@ export const fetchTypeOfPlantFacilityListApi = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/operations/facility_list/`
+        `company_details/operations/facility_list/`,
       );
 
       if (response.status === 400) {
@@ -280,7 +280,7 @@ export const fetchTypeOfPlantFacilityListApi = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 //source list(Water)
@@ -299,7 +299,7 @@ export const fetchSourceListApi = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 //source list(Electricity)
@@ -308,7 +308,7 @@ export const fetchElectricitySourceListApi = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/electricity/source/`
+        `environment/energy/electricity/source/`,
       );
 
       if (response.status === 400) {
@@ -320,7 +320,7 @@ export const fetchElectricitySourceListApi = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchAgencyList = createAsyncThunk(
@@ -328,7 +328,7 @@ export const fetchAgencyList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/water/overall/agency_type/`
+        `environment/water/overall/agency_type/`,
       );
 
       if (response.status === 400) {
@@ -340,14 +340,14 @@ export const fetchAgencyList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 export const fetchEnergyList = createAsyncThunk(
   "carbonCal/fetchEnergyList",
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/overall/agency_type/`
+        `environment/energy/overall/agency_type/`,
       );
 
       if (response.status === 400) {
@@ -359,7 +359,7 @@ export const fetchEnergyList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchFuelTypeList = createAsyncThunk(
@@ -367,7 +367,7 @@ export const fetchFuelTypeList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/fuel_combustion/onsite_combustion/fuel_type_list/`
+        `environment/energy/fuel_combustion/onsite_combustion/fuel_type_list/`,
       );
 
       if (response.status === 400) {
@@ -379,7 +379,7 @@ export const fetchFuelTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchFuelUnitTypeList = createAsyncThunk(
@@ -388,7 +388,7 @@ export const fetchFuelUnitTypeList = createAsyncThunk(
     console.log(fuel_type, "fuel type from common slice");
     try {
       const response = await apiService.get(
-        `environment/energy/fuel_combustion/onsite_combustion/fuel_unit_list/?fuel_type=${fuel_type}`
+        `environment/energy/fuel_combustion/onsite_combustion/fuel_unit_list/?fuel_type=${fuel_type}`,
       );
 
       if (response.status === 400) {
@@ -400,7 +400,7 @@ export const fetchFuelUnitTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchOnsiteVehicalFuelTypeList = createAsyncThunk(
@@ -408,7 +408,7 @@ export const fetchOnsiteVehicalFuelTypeList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/fuel_combustion/onsite_vehicles/fuel_type/`
+        `environment/energy/fuel_combustion/onsite_vehicles/fuel_type/`,
       );
 
       if (response.status === 400) {
@@ -420,7 +420,7 @@ export const fetchOnsiteVehicalFuelTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchOwnerShipData = createAsyncThunk(
@@ -428,7 +428,7 @@ export const fetchOwnerShipData = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `environment/energy/fuel_combustion/onsite_vehicles/ownership/`
+        `environment/energy/fuel_combustion/onsite_vehicles/ownership/`,
       );
 
       if (response.status === 400) {
@@ -440,7 +440,7 @@ export const fetchOwnerShipData = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchWorkforceGenderlistData = createAsyncThunk(
@@ -448,7 +448,7 @@ export const fetchWorkforceGenderlistData = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/workforce/employees/genderlist/`
+        `workplace/workforce/employees/genderlist/`,
       );
 
       if (response.status === 400) {
@@ -460,7 +460,7 @@ export const fetchWorkforceGenderlistData = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchWorkforceTypeData = createAsyncThunk(
@@ -468,7 +468,7 @@ export const fetchWorkforceTypeData = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/workforce/employees/typelist/`
+        `workplace/workforce/employees/typelist/`,
       );
 
       if (response.status === 400) {
@@ -480,7 +480,7 @@ export const fetchWorkforceTypeData = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchSegmentList = createAsyncThunk(
@@ -488,7 +488,7 @@ export const fetchSegmentList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/training/ingeneral/segmentlist/`
+        `workplace/training/ingeneral/segmentlist/`,
       );
 
       if (response.status === 400) {
@@ -500,7 +500,7 @@ export const fetchSegmentList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchWorkforceWagesSegmentList = createAsyncThunk(
@@ -508,7 +508,7 @@ export const fetchWorkforceWagesSegmentList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/workforce/wages/segmentlist/`
+        `workplace/workforce/wages/segmentlist/`,
       );
 
       if (response.status === 400) {
@@ -520,7 +520,7 @@ export const fetchWorkforceWagesSegmentList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchDeductedAndDepositedList = createAsyncThunk(
@@ -528,7 +528,7 @@ export const fetchDeductedAndDepositedList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/health_and_safety/deposited_deducted/`
+        `workplace/health_and_safety/deposited_deducted/`,
       );
 
       if (response.status === 400) {
@@ -540,7 +540,7 @@ export const fetchDeductedAndDepositedList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchPoliciesPenaltiesMonetaryTypeList = createAsyncThunk(
@@ -548,7 +548,7 @@ export const fetchPoliciesPenaltiesMonetaryTypeList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/policies_and_penalties/monetarytypelist/`
+        `workplace/policies_and_penalties/monetarytypelist/`,
       );
 
       if (response.status === 400) {
@@ -560,7 +560,7 @@ export const fetchPoliciesPenaltiesMonetaryTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchPoliciesPenaltiesNonMonetaryTypeList = createAsyncThunk(
@@ -568,7 +568,7 @@ export const fetchPoliciesPenaltiesNonMonetaryTypeList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/policies_and_penalties/nonmonetarytypelist/`
+        `workplace/policies_and_penalties/nonmonetarytypelist/`,
       );
 
       if (response.status === 400) {
@@ -580,7 +580,7 @@ export const fetchPoliciesPenaltiesNonMonetaryTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const ConsumerComplaintsTypeList = createAsyncThunk(
@@ -588,7 +588,7 @@ export const ConsumerComplaintsTypeList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `community/type_Consumer_Complaints_List/`
+        `community/type_Consumer_Complaints_List/`,
       );
 
       if (response.status === 400) {
@@ -600,7 +600,7 @@ export const ConsumerComplaintsTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const CommunityRecalTypelList = createAsyncThunk(
@@ -618,7 +618,7 @@ export const CommunityRecalTypelList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchFrequencyEngagement = createAsyncThunk(
@@ -626,7 +626,7 @@ export const fetchFrequencyEngagement = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `community/frequency_of_engagement/`
+        `community/frequency_of_engagement/`,
       );
 
       if (response.status === 400) {
@@ -638,7 +638,7 @@ export const fetchFrequencyEngagement = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchAppeal = createAsyncThunk(
@@ -646,7 +646,7 @@ export const fetchAppeal = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `workplace/policies_and_penalties/OptionsList/`
+        `workplace/policies_and_penalties/OptionsList/`,
       );
 
       if (response.status === 400) {
@@ -657,7 +657,7 @@ export const fetchAppeal = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const fetchRemarks = createAsyncThunk(
@@ -665,7 +665,7 @@ export const fetchRemarks = createAsyncThunk(
   async (financialYear) => {
     try {
       const response = await apiService.get(
-        `api/recommendation/?financial_year=${financialYear}`
+        `api/recommendation/?financial_year=${financialYear}`,
       );
 
       if (
@@ -682,7 +682,7 @@ export const fetchRemarks = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 export const addRemark = createAsyncThunk(
@@ -705,7 +705,7 @@ export const addRemark = createAsyncThunk(
     } catch (error) {
       throw error;
     }
-  }
+  },
 );
 
 export const CurrencyTypeList = createAsyncThunk(
@@ -713,7 +713,7 @@ export const CurrencyTypeList = createAsyncThunk(
   async () => {
     try {
       const response = await apiService.get(
-        `company_details/operations/paid_up_capital_unit/`
+        `company_details/operations/paid_up_capital_unit/`,
       );
 
       if (response.status === 400) {
@@ -725,7 +725,7 @@ export const CurrencyTypeList = createAsyncThunk(
       console.error("Fetch error while fetching the user location:", error);
       throw error;
     }
-  }
+  },
 );
 
 const CommonApiSlice = createSlice({
@@ -739,7 +739,6 @@ const CommonApiSlice = createSlice({
     businessActivityList: [],
     reclaimMaterialList: [],
     reclaimTypeList: [],
-    productServiceList: [],
     productServiceList: [],
     wasteDisposedCategory: [],
     destinationServiceList: [],
@@ -859,14 +858,14 @@ const CommonApiSlice = createSlice({
       (state, action) => {
         state.loading = false;
         state.wasteDisposedCategory = action.payload;
-      }
+      },
     );
     builder.addCase(
       fetchWasteDisposedCategoryList.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
 
     builder.addCase(fetchGetproductsServicesList.pending, (state) => {
@@ -977,14 +976,14 @@ const CommonApiSlice = createSlice({
       (state, action) => {
         state.loading = false;
         state.plantFacilityList = action.payload;
-      }
+      },
     );
     builder.addCase(
       fetchTypeOfPlantFacilityListApi.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
 
     builder.addCase(fetchSourceListApi.pending, (state) => {
@@ -1011,7 +1010,7 @@ const CommonApiSlice = createSlice({
       (state, action) => {
         state.loading = false;
         state.elctricitySourceList = action.payload;
-      }
+      },
     );
     builder.addCase(fetchElectricitySourceListApi.rejected, (state, action) => {
       state.loading = false;
@@ -1084,14 +1083,14 @@ const CommonApiSlice = createSlice({
       (state, action) => {
         state.loading = false;
         state.fetchOnSiteFuelList = action.payload;
-      }
+      },
     );
     builder.addCase(
       fetchOnsiteVehicalFuelTypeList.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
 
     builder.addCase(fetchOwnerShipData.pending, (state) => {
@@ -1160,14 +1159,14 @@ const CommonApiSlice = createSlice({
       (state, action) => {
         state.loading = false;
         state.wagesSegmentList = action.payload;
-      }
+      },
     );
     builder.addCase(
       fetchWorkforceWagesSegmentList.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
 
     builder.addCase(fetchDeductedAndDepositedList.pending, (state) => {
@@ -1180,7 +1179,7 @@ const CommonApiSlice = createSlice({
       (state, action) => {
         state.loading = false;
         state.deducted_DepositedList = action.payload;
-      }
+      },
     );
     builder.addCase(fetchDeductedAndDepositedList.rejected, (state, action) => {
       state.loading = false;
@@ -1197,14 +1196,14 @@ const CommonApiSlice = createSlice({
       (state, action) => {
         state.loading = false;
         state.policiePenaltiesMonetaryTypelist = action.payload;
-      }
+      },
     );
     builder.addCase(
       fetchPoliciesPenaltiesMonetaryTypeList.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
 
     builder.addCase(
@@ -1213,21 +1212,21 @@ const CommonApiSlice = createSlice({
         state.loading = true;
         state.error = "";
         state.success = "";
-      }
+      },
     );
     builder.addCase(
       fetchPoliciesPenaltiesNonMonetaryTypeList.fulfilled,
       (state, action) => {
         state.loading = false;
         state.policiePenaltiesNonMonetaryTypelist = action.payload;
-      }
+      },
     );
     builder.addCase(
       fetchPoliciesPenaltiesNonMonetaryTypeList.rejected,
       (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      }
+      },
     );
 
     builder.addCase(ConsumerComplaintsTypeList.pending, (state) => {
