@@ -67,6 +67,29 @@ export const getPatient = createAsyncThunk(
   }
 );
 
+export const updatePatient = createAsyncThunk(
+  "carbonCal/updatePatient",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const response = await apiService.put(`updatePatient/${id}`, data);
+      
+      if (
+        response.status === 400 ||
+        response.status === 500 ||
+        response.status === 404
+      ) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      } else {
+        const responseData = await response.json();
+        return responseData;
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const deletePatient = createAsyncThunk(
   "carbonCal/deletePatient",
   async (id, { rejectWithValue }) => {
@@ -194,6 +217,25 @@ export const updatePrescription = createAsyncThunk(
   }
 );
 
+export const getPrescriptionById = createAsyncThunk(
+  "carbonCal/getPrescriptionById",
+  async (prescriptionId, { rejectWithValue }) => {
+    try {
+      const response = await apiService.get(`api/prescriptions/${prescriptionId}`);
+      
+      if (response.status === 400 || response.status === 500 || response.status === 404) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      } else {
+        const responseData = await response.json();
+        return responseData;
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const patientSlice = createSlice({
   name: "patientDetails",
   initialState: {
@@ -216,6 +258,9 @@ const patientSlice = createSlice({
     selectedVisit: null,
     selectedVisitLoading: false,
     selectedVisitError: "",
+    selectedPrescription: null,
+    selectedPrescriptionLoading: false,
+    selectedPrescriptionError: "",
   },
   reducers: {
     clearSuccessMessage: (state) => {
@@ -278,6 +323,20 @@ const patientSlice = createSlice({
       state.error = action.payload;
     });
 
+    builder.addCase(updatePatient.pending, (state) => {
+      state.loading = true;
+      state.error = "";
+      state.success = "";
+    });
+    builder.addCase(updatePatient.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = action.payload.message || "Patient updated successfully";
+    });
+    builder.addCase(updatePatient.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
     builder.addCase(deletePatient.pending, (state) => {
       state.loading = true;
       state.error = "";
@@ -336,6 +395,20 @@ const patientSlice = createSlice({
     builder.addCase(getVisitById.rejected, (state, action) => {
       state.selectedVisitLoading = false;
       state.selectedVisitError = action.payload;
+    });
+
+    builder.addCase(getPrescriptionById.pending, (state) => {
+      state.selectedPrescriptionLoading = true;
+      state.selectedPrescriptionError = "";
+      state.selectedPrescription = null;
+    });
+    builder.addCase(getPrescriptionById.fulfilled, (state, action) => {
+      state.selectedPrescriptionLoading = false;
+      state.selectedPrescription = action.payload.data;
+    });
+    builder.addCase(getPrescriptionById.rejected, (state, action) => {
+      state.selectedPrescriptionLoading = false;
+      state.selectedPrescriptionError = action.payload;
     });
 
     builder.addCase(updateVisit.pending, (state) => {
