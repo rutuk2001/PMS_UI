@@ -1,58 +1,56 @@
-import React from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   Button,
-  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContentText,
+  DialogTitle,
   Grid,
+  IconButton,
+  DialogContent,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-function DeleteConfirmDialog({ open, onClose, onDelete }) {
+export function DeleteConfirmDialog({
+  open,
+  onClose,
+  onConfirm,
+  title,
+  content,
+}) {
   const handleClose = () => {
-    onClose && onClose();
+    onClose?.();
   };
 
   const handleDelete = () => {
-    onDelete && onDelete();
+    onConfirm?.(); // 🔥 call parent logic
     handleClose();
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="delete-confirm-dialog-title"
-      aria-describedby="delete-confirm-dialog-description"
-    >
-      <DialogTitle id="delete-confirm-dialog-title">Are you sure?</DialogTitle>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>{title || "Are you sure?"}</DialogTitle>
+
       <IconButton
-        className="MuiIconButton-close"
         aria-label="close"
         onClick={handleClose}
+        sx={{ position: "absolute", right: 8, top: 8 }}
       >
         <CloseIcon />
       </IconButton>
-      <DialogContent
-        sx={{ width: "342px", maxWidth: "100%", boxSizing: "border-box" }}
-      >
-        <DialogContentText
-          id="delete-confirm-dialog-description"
-          color="text.primary"
-        >
-          Are you sure you want to delete? <br /> Once deleted, you will not be
-          able to retrieve it.
+
+      <DialogContent sx={{ width: 342 }}>
+        <DialogContentText color="text.primary">
+          {content ||
+            "Are you sure you want to delete? Once deleted, you will not be able to retrieve it."}
         </DialogContentText>
       </DialogContent>
+
       <DialogActions>
-        <Grid container direction="row" spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={6}>
             <Button
               variant="contained"
-              color="primary"
+              color="error"
               fullWidth
               onClick={handleDelete}
             >
@@ -60,12 +58,7 @@ function DeleteConfirmDialog({ open, onClose, onDelete }) {
             </Button>
           </Grid>
           <Grid item xs={6}>
-            <Button
-              variant="outlined"
-              color="primary"
-              fullWidth
-              onClick={handleClose}
-            >
+            <Button variant="outlined" fullWidth onClick={handleClose}>
               CANCEL
             </Button>
           </Grid>
@@ -74,5 +67,3 @@ function DeleteConfirmDialog({ open, onClose, onDelete }) {
     </Dialog>
   );
 }
-
-export default DeleteConfirmDialog;

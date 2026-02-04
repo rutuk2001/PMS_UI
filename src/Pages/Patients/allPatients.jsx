@@ -20,17 +20,27 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import { Add, Edit, Visibility, Delete, LocalPharmacy } from "@mui/icons-material";
+import {
+  Add,
+  Edit,
+  Visibility,
+  Delete,
+  LocalPharmacy,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllregisterPatient, deletePatient } from "../../store/patient/patientSlice";
-import DeleteConfirmDialog from "../../Components/DeleteConfirmDialog";
+import {
+  getAllregisterPatient,
+  deletePatient,
+} from "../../store/patient/patientSlice";
+import { DeleteConfirmDialog } from "../../Components/DeleteConfirmDialog";
+import { toast } from "react-toastify";
 
 const AllPatients = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { allRecords, total_records, loading, error } = useSelector(
-    (state) => state.patientDetails
+    (state) => state.patientDetails,
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,9 +48,12 @@ const AllPatients = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState(null);
   const [recordsPerPage] = useState(10);
+  const [isdeleted, setIsdeleted] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllregisterPatient({ page: currentPage, limit: recordsPerPage }));
+    dispatch(
+      getAllregisterPatient({ page: currentPage, limit: recordsPerPage }),
+    );
   }, [dispatch, currentPage, recordsPerPage]);
 
   const handlePageChange = (event, page) => {
@@ -74,33 +87,49 @@ const AllPatients = () => {
     setPatientToDelete(patient);
     setDeleteDialogOpen(true);
   };
+  //testing
 
   const confirmDelete = async () => {
-    if (patientToDelete) {
-      try {
-        await dispatch(deletePatient(patientToDelete._id)).unwrap();
-        // Refresh the current page
-        dispatch(getAllregisterPatient({ page: currentPage, limit: recordsPerPage }));
-      } catch (error) {
-        console.error("Failed to delete patient:", error);
-      }
+    if (!patientToDelete) return;
+
+    try {
+      const res = await dispatch(deletePatient(patientToDelete._id)).unwrap();
+      toast.success("Patient deleted successfully");
+      dispatch(
+        getAllregisterPatient({
+          page: currentPage,
+          limit: recordsPerPage,
+        }),
+      );
+    } catch (error) {
+      console.error("Failed to delete patient:", error);
+      toast.error(error?.message || "Failed to delete patient");
+    } finally {
+      setDeleteDialogOpen(false);
+      setPatientToDelete(null);
     }
-    setDeleteDialogOpen(false);
-    setPatientToDelete(null);
   };
 
-  const filteredPatients = allRecords.filter((patient) =>
-    patient.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.unique_patient_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.phone?.includes(searchTerm) ||
-    patient.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPatients = allRecords.filter(
+    (patient) =>
+      patient.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.unique_patient_id
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      patient.phone?.includes(searchTerm) ||
+      patient.email?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const totalPages = Math.ceil(total_records / recordsPerPage);
 
   if (loading && currentPage === 1) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="400px"
+      >
         <CircularProgress />
       </Box>
     );
@@ -110,7 +139,12 @@ const AllPatients = () => {
     <Container maxWidth="xl">
       <Box sx={{ mt: 4, mb: 4 }}>
         {/* Header */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
           <Typography variant="h4">All Patients</Typography>
           <Button
             variant="contained"
@@ -169,7 +203,9 @@ const AllPatients = () => {
                 {filteredPatients.length > 0 ? (
                   filteredPatients.map((patient, index) => (
                     <TableRow key={patient._id} hover>
-                      <TableCell>{(currentPage - 1) * recordsPerPage + index + 1}</TableCell>
+                      <TableCell>
+                        {(currentPage - 1) * recordsPerPage + index + 1}
+                      </TableCell>
                       <TableCell>
                         <Chip
                           label={patient.unique_patient_id || "N/A"}
@@ -177,7 +213,9 @@ const AllPatients = () => {
                           variant="outlined"
                         />
                       </TableCell>
-                      <TableCell>{patient.first_name + " " + patient.last_name || "N/A"}</TableCell>
+                      <TableCell>
+                        {patient.first_name + " " + patient.last_name || "N/A"}
+                      </TableCell>
                       <TableCell>{patient.age || "N/A"}</TableCell>
                       <TableCell>{patient.gender || "N/A"}</TableCell>
                       <TableCell>{patient.phone_number || "N/A"}</TableCell>
@@ -223,7 +261,9 @@ const AllPatients = () => {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={8} align="center">
-                      {searchTerm ? "No patients found matching your search." : "No patients found."}
+                      {searchTerm
+                        ? "No patients found matching your search."
+                        : "No patients found."}
                     </TableCell>
                   </TableRow>
                 )}
@@ -253,7 +293,7 @@ const AllPatients = () => {
         onClose={() => setDeleteDialogOpen(false)}
         onConfirm={confirmDelete}
         title="Delete Patient"
-        content={`Are you sure you want to delete patient "${patientToDelete?.name}"? This action cannot be undone.`}
+        content={`Are you sure you want to delete patient "${patientToDelete?.first_name}"? This action cannot be undone.`}
       />
     </Container>
   );

@@ -40,7 +40,6 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import { VisibilityOutlined, VisibilityOffOutlined } from "@mui/icons-material";
 
-import DeleteConfirmDialog from "./../../../Components/DeleteConfirmDialog";
 import {
   addUser,
   clearErrorMessage,
@@ -53,6 +52,7 @@ import {
 import { toast } from "react-toastify";
 import { current } from "@reduxjs/toolkit";
 import { fetchTypeOfPlantFacilityListApi } from "../../../store/CommonApi/CommonApiSlice";
+import { DeleteConfirmDialog } from "../../../Components/DeleteConfirmDialog";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 
@@ -104,10 +104,10 @@ function UsersList() {
   const dispatch = useDispatch();
 
   const { viewReport, error, success, total_page, roleList } = useSelector(
-    (state) => state.UserSliceDetails
+    (state) => state.UserSliceDetails,
   );
   const { plantFacilityList } = useSelector(
-    (state) => state.CommonApiDetailSlice
+    (state) => state.CommonApiDetailSlice,
   );
 
   console.log(viewReport, "++++++s____++");
@@ -363,10 +363,10 @@ function UsersList() {
             viewUser({
               page: paginationModel.page,
               page_size: paginationModel.pageSize,
-            })
+            }),
           );
           reset();
-        }
+        },
       );
     } else {
       dispatch(addUser(data)).then(() => {
@@ -375,7 +375,7 @@ function UsersList() {
           viewUser({
             page: paginationModel.page,
             page_size: paginationModel.pageSize,
-          })
+          }),
         );
       });
     }
@@ -391,7 +391,7 @@ function UsersList() {
       viewUser({
         page: newPage + 1,
         page_size: rowsPerPage,
-      })
+      }),
     );
   };
 
@@ -410,7 +410,7 @@ function UsersList() {
       viewUser({
         page: 1,
         page_size: rowsPerPage,
-      })
+      }),
     );
   };
 
@@ -460,7 +460,7 @@ function UsersList() {
         viewUser({
           page: 1,
           page_size: 5,
-        })
+        }),
       );
     });
   };
@@ -598,7 +598,7 @@ function UsersList() {
                 viewReport?.data
                   ?.slice(
                     pageUsersList * rowsPerPageUsersList,
-                    pageUsersList * rowsPerPageUsersList + rowsPerPageUsersList
+                    pageUsersList * rowsPerPageUsersList + rowsPerPageUsersList,
                   )
                   .map((row, index) => (
                     <TableRow hover role="checkbox" tabIndex={-1} key={index}>
@@ -608,8 +608,8 @@ function UsersList() {
                           column.id === "name"
                             ? `${row.firstname} ${row.lastname}`
                             : column.id === "phone_number"
-                            ? `${row.phone_extension} - ${value}`
-                            : value;
+                              ? `${row.phone_extension} - ${value}`
+                              : value;
 
                         return (
                           <TableCell key={column.id} align={column.align}>
@@ -710,7 +710,7 @@ function UsersList() {
                   column.id !== "role" &&
                   column.id !== "password" &&
                   column.id !== "confirm_password" &&
-                  column.id !== "status"
+                  column.id !== "status",
               )
               .map((column) => (
                 <Grid item key={column.id} xs={12} sm={6} md={6}>
@@ -766,7 +766,7 @@ function UsersList() {
                         column.id !== "role" &&
                         column.id !== "password" &&
                         column.id !== "confirm_password" &&
-                        column.id !== "status"
+                        column.id !== "status",
                     )
                     .map((column) => (
                       <Grid item key={column.id} xs={12} sm={6} md={4}>
@@ -799,7 +799,7 @@ function UsersList() {
                     column.id !== "role" &&
                     column.id !== "password" &&
                     column.id !== "confirm_password" &&
-                    column.id !== "status"
+                    column.id !== "status",
                 )
                 .map((column) => (
                   <Grid item key={column.id} xs={12} sm={6} md={4}>
@@ -892,7 +892,7 @@ function UsersList() {
                     column.id !== "phone_extension" &&
                     column.id !== "designation" &&
                     column.id !== "role" &&
-                    column.id !== "status"
+                    column.id !== "status",
                 )
                 .map((column) => (
                   <Grid item key={column.id} xs={12} sm={10} md={6}>
