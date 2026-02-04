@@ -87,6 +87,7 @@ const AllPatients = () => {
     setPatientToDelete(patient);
     setDeleteDialogOpen(true);
   };
+  //testing
 
   const confirmDelete = async () => {
     if (!patientToDelete) return;
